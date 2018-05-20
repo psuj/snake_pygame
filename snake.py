@@ -16,10 +16,12 @@ sound1 = pygame.mixer.Sound("sound1.wav")
 
 # width, height
 snake_head_location = (0, 0)
+previous_snake_head_location = (0, 0)
 food_location = (999, 999)
 current_move_direction = ""
 food_spawned = 0
 snake_body = list()
+snake_body.append(snake_head_location)
 
 screen.fill((100, 100, 100))
 screen.blit(snake_unit, (0, 0))
@@ -27,7 +29,19 @@ screen.blit(snake_unit, (0, 0))
 def show_snake_body():
 	#global snake_body
 	#new_snake_body = list()
-	if len(snake_body) > 0:
+	#global previous_snake_head_location
+	if len(snake_body) > 1:
+		#if len(snake_body) == 1:
+		#	pass
+		print("show snake body")
+		for i in range(1, len(snake_body), 1):
+			#print("snake_body " + i + "=" + snake_body[i])
+			snake_body[i] = snake_body[i-1]
+			print("snake_body " + str(i) + "=" + str(snake_body[i]))
+
+		for i in range(1, len(snake_body), 1):
+			screen.blit(snake_body_img, snake_body[i])
+
 		'''if move_direction == "right":
 			for unit in snake_body:
 				new_unit = (unit[0] + 20, unit[1])
@@ -50,18 +64,25 @@ def show_snake_body():
 			#screen.blit(snake_body_img, unit)
 		#pygame.display.flip()
 	'''
-		snake_body[0] = snake_head_location
-		screen.blit(snake_body_img, snake_body[0])
+		#snake_body[0] = snake_head_location
+		#screen.blit(snake_body_img, snake_body[0])
+		print(len(snake_body))
 
 def enlarge_snake(head_x, head_y):
 	global snake_body
 	#snake_head_location[0] = head_x
 	#snake_head_location[1] = head_y
-	if len(snake_body) == 0:
-		new_body_unit = (head_x - 20, head_y)
+	if len(snake_body) == 1:
+	#new_body_unit = (snake_head_location[0] - 20, snake_head_location[1])
+		#new_body_unit = (snake_body[len(snake_body)-1][0] - 20, snake_body[len(snake_body)-1][1])
+		new_body_unit = (snake_body[0][0] - 20, snake_body[0][1])
+		print(new_body_unit)
 		snake_body.append(new_body_unit)
+	#elif len(snake_body) > 1:
+		#pass
+
 	#else:
-		print(snake_body[0])
+	#	print(snake_body[0])
 		#snake_body[len(snake_body)-1]
 	
 	#for unit in snake_body:
@@ -111,6 +132,7 @@ def move_snake_head(direction):
 			#print(new_location)
 			screen.blit(snake_unit, (new_location[0], new_location[1]))
 			snake_head_location = new_location
+			snake_body[0] = snake_head_location
 		else:
 			screen.blit(snake_unit, (snake_head_location[0], snake_head_location[1]))
 	elif direction == "left":
@@ -118,6 +140,7 @@ def move_snake_head(direction):
 		if new_location[0] > -10:
 			screen.blit(snake_unit, (new_location[0], new_location[1]))
 			snake_head_location = new_location
+			snake_body[0] = snake_head_location
 		else:
 			screen.blit(snake_unit, (snake_head_location[0], snake_head_location[1]))
 	elif direction == "up":
@@ -125,6 +148,7 @@ def move_snake_head(direction):
 		if new_location[1] > -10:
 			screen.blit(snake_unit, (new_location[0], new_location[1]))
 			snake_head_location = new_location
+			snake_body[0] = snake_head_location
 		else:
 			screen.blit(snake_unit, (snake_head_location[0], snake_head_location[1]))
 	elif direction == "down":
@@ -132,11 +156,28 @@ def move_snake_head(direction):
 		if new_location[1] < height - 30:
 			screen.blit(snake_unit, (new_location[0], new_location[1]))
 			snake_head_location = new_location
+			snake_body[0] = snake_head_location
 		else:
 			screen.blit(snake_unit, (snake_head_location[0], snake_head_location[1]))
+		
+	#print(len(snake_body))
+	
+	if len(snake_body) > 1:
+		#if len(snake_body) == 1:
+		#	pass
+		#print("show snake body")
+		for i in range(1, len(snake_body), 1):
+			#print("snake_body " + i + "=" + snake_body[i])
+			snake_body[i] = snake_body[i-1]
+			#print("snake_body " + str(i) + "=" + str(snake_body[i]))
 
+		#for i in range(0, len(snake_body), 1):
+		#	print("snake_body " + str(i) + "=" + str(snake_body[i]))
+		for i in range(1, len(snake_body), 1):
+			screen.blit(snake_body_img, snake_body[i])
+	
 
-	pygame.display.flip()
+	#pygame.display.flip()
 
 def input(events):
 	#print("input")
@@ -158,6 +199,8 @@ def input(events):
 				move_snake_head("down")
 				return "down"
 			#print(event)
+
+previous_location_counter = 0
 	
 
 while True:
@@ -179,9 +222,15 @@ while True:
 		current_move_direction = moving_direction
 		#spawn_snake_food()
 	#screen.fill((100, 100, 100))
+	#if previous_location_counter % 2 == 0:
+		#previous_snake_head_location = snake_head_location
+	#move_snake_head(current_move_direction)
+	#print(snake_body[0])
+	#print(len(snake_body))
+	#show_snake_body()
 	move_snake_head(current_move_direction)
-	show_snake_body()
 	#show_snake_body()
 	#move_snake_head(current_move_direction)
 	pygame.display.flip()
 	#time.sleep(0.3)
+	#previous_location_counter += 1
