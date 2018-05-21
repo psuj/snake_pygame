@@ -72,14 +72,15 @@ def enlarge_snake(head_x, head_y):
 	global snake_body
 	#snake_head_location[0] = head_x
 	#snake_head_location[1] = head_y
-	if len(snake_body) == 1:
+	#if len(snake_body) == 1:
 	#new_body_unit = (snake_head_location[0] - 20, snake_head_location[1])
 		#new_body_unit = (snake_body[len(snake_body)-1][0] - 20, snake_body[len(snake_body)-1][1])
-		new_body_unit = (snake_body[0][0] - 20, snake_body[0][1])
-		print(new_body_unit)
-		snake_body.append(new_body_unit)
+		#new_body_unit = (snake_body[0][0] - 20, snake_body[0][1])
+		#print(new_body_unit)
+		#snake_body.append(new_body_unit)
 	#elif len(snake_body) > 1:
-		#pass
+	new_body_unit = (snake_body[len(snake_body)-1][0] - 30, snake_body[len(snake_body)-1][1])
+	snake_body.append(new_body_unit)
 
 	#else:
 	#	print(snake_body[0])
@@ -120,6 +121,7 @@ def spawn_snake_food():
 
 def move_snake_head(direction):
 	global snake_head_location
+	global snake_body
 	#print("move snake head")
 	#screen.fill((100, 100, 100))
 	move_unit = 20
@@ -161,22 +163,31 @@ def move_snake_head(direction):
 			screen.blit(snake_unit, (snake_head_location[0], snake_head_location[1]))
 		
 	#print(len(snake_body))
+	snake_body_to_show = list()
+	snake_body_to_show.append(snake_head_location)
 	
-	if len(snake_body) > 1:
+	#if len(snake_body) > 1:
 		#if len(snake_body) == 1:
 		#	pass
 		#print("show snake body")
-		for i in range(1, len(snake_body), 1):
-			#print("snake_body " + i + "=" + snake_body[i])
-			snake_body[i] = snake_body[i-1]
-			#print("snake_body " + str(i) + "=" + str(snake_body[i]))
+	for i in range(1, len(snake_body)-1, 1):
+		snake_body_to_show.append(snake_body[i-1])
+		print("snake_body " + str(i) + "=" + str(snake_body_to_show[i]))
 
-		#for i in range(0, len(snake_body), 1):
-		#	print("snake_body " + str(i) + "=" + str(snake_body[i]))
-		for i in range(1, len(snake_body), 1):
-			screen.blit(snake_body_img, snake_body[i])
+	for i in range(0, len(snake_body_to_show)-1, 1):
+		snake_body[i] = snake_body_to_show[i]
+		screen.blit(snake_body_img, snake_body[i])
+	#		print(i)
+		#print("snake_body " + i + "=" + snake_body[i])
+	#		new_snake_body[i] = snake_body[i-1]
+		#print("snake_body " + str(i) + "=" + str(snake_body[i]))
+
+	#for i in range(0, len(snake_body), 1):
+		#print("snake_body " + str(i) + "=" + str(snake_body[i]))
+		#for i in range(1, len(snake_body)-1, 1):
+		#	screen.blit(snake_body_img, new_snake_body[i])
 	
-
+	#snake_body = new_snake_body
 	#pygame.display.flip()
 
 def input(events):
