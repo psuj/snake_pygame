@@ -26,47 +26,23 @@ snake_body.append(snake_head_location)
 screen.fill((100, 100, 100))
 screen.blit(snake_unit, (0, 0))
 
-def show_snake_body():
-	#global snake_body
-	#new_snake_body = list()
-	#global previous_snake_head_location
-	if len(snake_body) > 1:
-		#if len(snake_body) == 1:
-		#	pass
-		print("show snake body")
-		for i in range(1, len(snake_body), 1):
-			#print("snake_body " + i + "=" + snake_body[i])
-			snake_body[i] = snake_body[i-1]
-			print("snake_body " + str(i) + "=" + str(snake_body[i]))
+def check_if_move_is_possible(location):
+	#for unit in snake_body:
+	#print("checking for location " + str(location))
+	for i in range(2, len(snake_body), 1):
+		#print("comparing" + str(location) + " and " + str(snake_body[i]))
+		#if location[0] >= unit[0] and location[0] <= unit[0] and location[1] >= unit[1] and location[1] <= unit[1]:
+			#print("loc check")
+		if location == snake_body[i]:
+			#print("wykryto kolizje")
+			return False
+		#if 1:
+		#	return True
+		#else:
+			#print("loc2")
+		#	return True
+	return True
 
-		for i in range(1, len(snake_body), 1):
-			screen.blit(snake_body_img, snake_body[i])
-
-		'''if move_direction == "right":
-			for unit in snake_body:
-				new_unit = (unit[0] + 20, unit[1])
-				new_snake_body.append(new_unit)
-
-
-
-		#snake_body[0] = snake_head_location
-		for unit in new_snake_body:
-			screen.blit(snake_body_img, unit)
-		pygame.display.flip()
-		
-		#print(len(snake_body))
-		#snake_body[0] = snake_head_location
-		#for i in range(1, len(snake_body), 1):
-		#	snake_body[i] = snake_body[i-1] 
-		#snake_body[0] = snake_head_location
-
-		#for unit in snake_body:
-			#screen.blit(snake_body_img, unit)
-		#pygame.display.flip()
-	'''
-		#snake_body[0] = snake_head_location
-		#screen.blit(snake_body_img, snake_body[0])
-		print(len(snake_body))
 
 def enlarge_snake(head_x, head_y):
 	global snake_body
@@ -79,7 +55,8 @@ def enlarge_snake(head_x, head_y):
 		#print(new_body_unit)
 		#snake_body.append(new_body_unit)
 	#elif len(snake_body) > 1:
-	new_body_unit = (snake_body[len(snake_body)-1][0] - 30, snake_body[len(snake_body)-1][1])
+	#new_body_unit = (snake_body[len(snake_body)-1][0], snake_body[len(snake_body)-1][1])
+	new_body_unit = (0, 0)
 	snake_body.append(new_body_unit)
 
 	#else:
@@ -104,7 +81,7 @@ def food_eaten_check():
 	for x in range(head_x, head_x + 21, 1):
 		for y in range(head_y, head_y + 21, 1):
 			if x == food_x and y == food_y:
-				print("food eaten")
+				#print("food eaten")
 				food_spawned = 0
 				sound1.play()
 				enlarge_snake(head_x, head_y)
@@ -125,59 +102,84 @@ def move_snake_head(direction):
 	#print("move snake head")
 	#screen.fill((100, 100, 100))
 	move_unit = 20
-	#new_location = (5, 0)
+	wall_hit = 0
+	new_location = (0, 0)
 	#print(snake_head_location[0])
 	#print(snake_head_location[1])
 	if direction == "right":
 		new_location = (snake_head_location[0] + move_unit, snake_head_location[1])
-		if new_location[0] < width - 30:
+		if new_location[0] < width - 30:#and check_if_move_is_possible(new_location):
 			#print(new_location)
-			screen.blit(snake_unit, (new_location[0], new_location[1]))
+			#screen.blit(snake_unit, (new_location[0], new_location[1]))
 			snake_head_location = new_location
 			snake_body[0] = snake_head_location
 		else:
+			#print("else")
 			screen.blit(snake_unit, (snake_head_location[0], snake_head_location[1]))
+			wall_hit = 1
 	elif direction == "left":
 		new_location = (snake_head_location[0] - move_unit, snake_head_location[1])
-		if new_location[0] > -10:
-			screen.blit(snake_unit, (new_location[0], new_location[1]))
+		if new_location[0] > -10:#and check_if_move_is_possible(new_location):
+			#screen.blit(snake_unit, (new_location[0], new_location[1]))
 			snake_head_location = new_location
 			snake_body[0] = snake_head_location
 		else:
 			screen.blit(snake_unit, (snake_head_location[0], snake_head_location[1]))
+			wall_hit = 1
 	elif direction == "up":
 		new_location = (snake_head_location[0], snake_head_location[1] - move_unit)
-		if new_location[1] > -10:
-			screen.blit(snake_unit, (new_location[0], new_location[1]))
+		if new_location[1] > -10:#and check_if_move_is_possible(new_location):
+			#screen.blit(snake_unit, (new_location[0], new_location[1]))
 			snake_head_location = new_location
 			snake_body[0] = snake_head_location
 		else:
 			screen.blit(snake_unit, (snake_head_location[0], snake_head_location[1]))
+			wall_hit = 1
 	elif direction == "down":
 		new_location = (snake_head_location[0], snake_head_location[1] + move_unit)
-		if new_location[1] < height - 30:
-			screen.blit(snake_unit, (new_location[0], new_location[1]))
+		if new_location[1] < height - 30:#and check_if_move_is_possible(new_location):
+			#screen.blit(snake_unit, (new_location[0], new_location[1]))
 			snake_head_location = new_location
 			snake_body[0] = snake_head_location
 		else:
 			screen.blit(snake_unit, (snake_head_location[0], snake_head_location[1]))
+			wall_hit = 1
 		
-	#print(len(snake_body))
+		#print(len(snake_body))
 	snake_body_to_show = list()
 	snake_body_to_show.append(snake_head_location)
-	
-	#if len(snake_body) > 1:
-		#if len(snake_body) == 1:
-		#	pass
-		#print("show snake body")
-	for i in range(1, len(snake_body)-1, 1):
-		snake_body_to_show.append(snake_body[i-1])
-		print("snake_body " + str(i) + "=" + str(snake_body_to_show[i]))
+	#snake_body_to_show.append(snake_head_location)
+		
+		#if len(snake_body) > 1:
+			#if len(snake_body) == 1:
+			#	pass
+			#print("show snake body")
+	if not wall_hit:
+		for i in range(1, len(snake_body), 1):
+			snake_body_to_show.append(snake_body[i-1])
+			#print("snake_body " + str(i) + "=" + str(snake_body_to_show[i]))
+		#for i in range(1, len(snake_body), 1):
+			#unit = (snake_body[i-1][0] - 10, snake_body[i-1][1])
+			#snake_body_to_show.append(unit)
 
-	for i in range(0, len(snake_body_to_show)-1, 1):
-		snake_body[i] = snake_body_to_show[i]
-		screen.blit(snake_body_img, snake_body[i])
-	#		print(i)
+		#for i in range(0, len(snake_body), 1):
+			#print("snake_body " + str(i) + "=" + str(snake_body_to_show[i]))
+
+		for i in range(0, len(snake_body_to_show), 1):
+			snake_body[i] = snake_body_to_show[i]
+	#print("---")
+	if check_if_move_is_possible(snake_body[0]):
+	#print("\n")
+		for i in range(1, len(snake_body), 1):
+			screen.blit(snake_body_img, snake_body[i])
+
+	#if check_if_move_is_possible(snake_body[0]):
+		screen.blit(snake_unit, snake_body[0])
+
+	else:
+		print("game over")
+		return "game over"
+		#		print(i)
 		#print("snake_body " + i + "=" + snake_body[i])
 	#		new_snake_body[i] = snake_body[i-1]
 		#print("snake_body " + str(i) + "=" + str(snake_body[i]))
@@ -211,7 +213,7 @@ def input(events):
 				return "down"
 			#print(event)
 
-previous_location_counter = 0
+
 	
 
 while True:
@@ -239,9 +241,12 @@ while True:
 	#print(snake_body[0])
 	#print(len(snake_body))
 	#show_snake_body()
-	move_snake_head(current_move_direction)
-	#show_snake_body()
 	#move_snake_head(current_move_direction)
+	#show_snake_body()
+	result = move_snake_head(current_move_direction)
+	if result == "game over":
+		print("game over main")
+		#pygame.quit()
 	pygame.display.flip()
-	#time.sleep(0.3)
+	#time.sleep(1)
 	#previous_location_counter += 1
