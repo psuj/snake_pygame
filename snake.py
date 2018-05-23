@@ -3,10 +3,19 @@ import pygame, sys, os, time, random
 
 pygame.init()
 pygame.mixer.init()
+pygame.font.init()
 
+font_object = pygame.font.Font("/Library/Fonts/Comic Sans MS.ttf", 40)
+game_over_text = font_object.render("GAME OVER", True, (255, 20, 20))
+score_text = font_object.render("0", True, (20, 255, 20))
+
+
+#print(font)
 width = 800
 height = 800
 screen = pygame.display.set_mode((width, height))
+points = 0
+game_running = 1
 
 #object loads
 snake_unit = pygame.image.load("img1")
@@ -25,6 +34,15 @@ snake_body.append(snake_head_location)
 
 screen.fill((100, 100, 100))
 screen.blit(snake_unit, (0, 0))
+
+def game_over_procedure():
+	while True:
+		#screen.fill((50, 50, 50))
+		screen.blit(game_over_text, (380, 380))
+		pygame.display.flip()
+	#time.sleep(2)
+	#a = input()
+
 
 def check_if_move_is_possible(location):
 	#for unit in snake_body:
@@ -46,6 +64,8 @@ def check_if_move_is_possible(location):
 
 def enlarge_snake(head_x, head_y):
 	global snake_body
+	global points
+	global score_text
 	#snake_head_location[0] = head_x
 	#snake_head_location[1] = head_y
 	#if len(snake_body) == 1:
@@ -56,8 +76,14 @@ def enlarge_snake(head_x, head_y):
 		#snake_body.append(new_body_unit)
 	#elif len(snake_body) > 1:
 	#new_body_unit = (snake_body[len(snake_body)-1][0], snake_body[len(snake_body)-1][1])
-	new_body_unit = (0, 0)
+	new_body_unit = (999, 999)
+	if len(snake_body) == 1:
+		snake_body.append(new_body_unit)
 	snake_body.append(new_body_unit)
+	points += 1
+	score_text = font_object.render(str(points), True, (20, 255, 20))
+	#
+
 
 	#else:
 	#	print(snake_body[0])
@@ -179,6 +205,7 @@ def move_snake_head(direction):
 	else:
 		print("game over")
 		return "game over"
+		#game_over_procedure()
 		#		print(i)
 		#print("snake_body " + i + "=" + snake_body[i])
 	#		new_snake_body[i] = snake_body[i-1]
@@ -192,7 +219,7 @@ def move_snake_head(direction):
 	#snake_body = new_snake_body
 	#pygame.display.flip()
 
-def input(events):
+def kb_input(events):
 	#print("input")
 	for event in events:
 		#print(event)
@@ -222,7 +249,7 @@ while True:
 	#food_eaten_check()
 	#show_snake_body(current_move_direction)
 	food_eaten_check()
-	moving_direction = input(pygame.event.get())
+	moving_direction = kb_input(pygame.event.get())
 	#print(moving_direction)
 	#if not food_spawned:
 	screen.fill((100, 100, 100))
@@ -243,10 +270,25 @@ while True:
 	#show_snake_body()
 	#move_snake_head(current_move_direction)
 	#show_snake_body()
+	screen.blit(score_text, (750, 750))
 	result = move_snake_head(current_move_direction)
 	if result == "game over":
-		print("game over main")
+		screen.blit(game_over_text, (360, 360))
+		game_running = 0
+		pygame.display.flip()
+		#game_running = 0
+		#print("game over main")
 		#pygame.quit()
-	pygame.display.flip()
+		#while True:
+			#screen.fill((50, 50, 50))
+			#screen.blit(game_over_text, (380, 380))
+			#pygame.display.flip()
+		#time.sleep(2)
+	#screen.blit(game_over_text, (100, 100))
+	
+	if game_running:
+		pygame.display.flip()
+	
+#game_over_procedure()
 	#time.sleep(1)
 	#previous_location_counter += 1
